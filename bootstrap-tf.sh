@@ -1,8 +1,11 @@
 #!/bin/bash
-mkdir -p bin
+
+. ./common.sh
 
 tfctl_version="v0.16.0-rc.2"
 tfctl_download_url="https://github.com/weaveworks/tf-controller/releases/download"
+
+mkdir -p bin
 
 # For AMD64 / x86_64
 [ $(uname -m) = x86_64 ] && curl -Lo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_amd64.tar.gz

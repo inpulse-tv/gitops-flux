@@ -1,13 +1,9 @@
 #!/bin/bash
+
+. ./common.sh
+
 flux_version="2.0.1"
 kind_version="v0.20.0"
-
-GREEN='\033[0;32m'
-NC='\033[0m' # No Color
-
-function echo_green {
-  printf "${GREEN}${1}${NC}\n"
-}
 
 mkdir -p ./bin
 
