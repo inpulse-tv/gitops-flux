@@ -28,6 +28,8 @@ set -e
 github_repository=$(git remote get-url origin | cut -d ':' -f2)
 owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
 
+mkdir -p apps clusters/kind
+
 echo_green "Bootstrap flux and commit to github"
 flux bootstrap github \
   --owner=${owner} \
