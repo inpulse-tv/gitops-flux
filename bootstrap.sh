@@ -5,16 +5,17 @@
 flux_version="2.0.1"
 kind_version="v0.20.0"
 
+echo_green "Download flux and kind cli"
 mkdir -p ./bin
 
 # For AMD64 / x86_64
-[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-amd64
+[ $(uname -m) = x86_64 ] && curl -sLo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-amd64
 # For ARM64
-[ $(uname -m) = aarch64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-arm64
+[ $(uname -m) = aarch64 ] && curl -sLo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-arm64
 chmod +x ./kind
 mv ./kind ./bin
 
-curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash ./bin
+curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bin
 
 ./bin/kind create cluster --name gitops-flux
 
