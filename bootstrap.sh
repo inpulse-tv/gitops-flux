@@ -14,14 +14,14 @@ mkdir -p ./bin
 chmod +x ./kind
 mv ./kind ./bin
 
-curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} BIN_DIR="./bin" bash
+curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash ./bin
 
 ./bin/kind create cluster --name gitops-flux
 
+set -e
 ./bin/flux  check --pre
 ./bin/flux  install
 
-set -e
 github_repository=$(git remote get-url origin | cut -d ':' -f2)
 owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
 

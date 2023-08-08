@@ -32,7 +32,7 @@ echo_green "Export helmrelease tf-controller "
   --export > ./apps/localstack-helm-release.yaml
 
 echo_green "Export terraform ressources "
-./bin/tfctl create kube \
+./bin/tfctl create tf-ressources \
   --verbose \
   --interval=30s \
   --source=GitRepository/flux-system.flux-system \
