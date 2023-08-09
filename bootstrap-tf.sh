@@ -9,9 +9,9 @@ mkdir -p ./bin ./apps/ ./tf/flux
 
 echo_green "Download tfctl"
 # For AMD64 / x86_64
-[ $(uname -m) = x86_64 ] && curl -Lo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_amd64.tar.gz
+[ $(uname -m) = x86_64 ] && curl -sLo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_amd64.tar.gz
 # For ARM64
-[ $(uname -m) = aarch64 ] && curl -Lo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_arm64.tar.gz
+[ $(uname -m) = aarch64 ] && curl -sLo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_arm64.tar.gz
 tar -xzf ./tfctl.tar.gz tfctl
 mv ./tfctl ./bin/tfctl
 rm tfctl.tar.gz
@@ -32,19 +32,6 @@ echo_green "Export helmrelease tf-controller "
   --interval=30s \
   --source=HelmRepository/tf-controller.flux-system \
   --export > ./apps/tf-controller-helm-release.yaml
-
-echo_green "Export kustomization tf-controller"
-./bin/flux create kustomization tf-controller \
-  --target-namespace=default \
-  --source=GitRepository/flux-system.flux-system \
-  --path="./apps" \
-  --prune=true \
-  --wait=true \
-  --verbose \
-  --interval=30m \
-  --retry-interval=2m \
-  --health-check-timeout=3m \
-  --export > ./clusters/kind/tf-controller-kustomization.yaml
 
 # echo_green "Export terraform ressources "
 # ./bin/tfctl create tf-ressources \

@@ -54,7 +54,7 @@ echo_green "Export kustomization localstack"
   --prune=true \
   --wait=true \
   --verbose \
-  --interval=30m \
+  --interval=5m \
   --retry-interval=2m \
   --health-check-timeout=3m \
-  --export > ./clusters/kind/localstack-kustomization.yaml
+  --export > ./clusters/kind/apps-kustomization.yaml
