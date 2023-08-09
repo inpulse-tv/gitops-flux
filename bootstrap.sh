@@ -4,16 +4,17 @@
 
 flux_version="2.0.1"
 kind_version="v0.20.0"
+github_repository=$(git remote get-url origin | cut -d ':' -f2)
+owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
+
+mkdir -p ./bin ./apps ./clusters/kind
 
 echo_green "Download flux and kind cli"
-mkdir -p ./bin
-
 # For AMD64 / x86_64
-[ $(uname -m) = x86_64 ] && curl -sLo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-amd64
+[ $(uname -m) = x86_64 ] && curl -sLo ./bin/kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-amd64
 # For ARM64
-[ $(uname -m) = aarch64 ] && curl -sLo ./kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-arm64
-chmod +x ./kind
-mv ./kind ./bin
+[ $(uname -m) = aarch64 ] && curl -sLo ./bin/kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-arm64
+chmod +x ./bin/kind
 
 curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bin
 
@@ -21,12 +22,6 @@ curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bi
 
 set -e
 ./bin/flux  check --pre
-./bin/flux  install
-
-github_repository=$(git remote get-url origin | cut -d ':' -f2)
-owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
-
-mkdir -p apps clusters/kind
 
 echo_green "Bootstrap flux and commit to github"
 ./bin/flux  bootstrap github \
@@ -35,8 +30,6 @@ echo_green "Bootstrap flux and commit to github"
   --branch=main \
   --path=./clusters/kind \
   --personal
-
-git pull origin main
 
 echo_green "Export helmrepository source localstack"
 ./bin/flux create source helm localstack \
