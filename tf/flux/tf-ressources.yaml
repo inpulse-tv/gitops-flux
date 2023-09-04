@@ -1,0 +1,13 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: tf-ressources
+  namespace: flux-system
+spec:
+  interval: 1m
+  approvePlan: auto
+  path: ./tf
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
