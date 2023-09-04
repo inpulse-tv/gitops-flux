@@ -43,6 +43,7 @@ EOF
   --verbose \
   --interval=30s \
   --source=HelmRepository/tf-controller.flux-system \
+  --chart-version="v0.16.0-rc.2" \
   --export > ./apps/helm-release-tf-controller.yaml
 rm values-tf-controller.yml
 
