@@ -47,7 +47,7 @@ echo_green "Export helmrelease localstack"
   --export > ./apps/localstack-helm-release.yaml
 
 echo_green "Export kustomization localstack"
-./bin/flux create kustomization localstack \
+./bin/flux create kustomization apps \
   --target-namespace=default \
   --source=GitRepository/flux-system.flux-system \
   --path="./apps" \
