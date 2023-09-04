@@ -7,7 +7,7 @@ tfctl_download_url="https://github.com/weaveworks/tf-controller/releases/downloa
 
 mkdir -p ./bin ./apps/ ./tf/flux
 
-echo_green "Download tfctl and kubectl"
+echo_green "Download tfctl"
 # For AMD64 / x86_64
 [ $(uname -m) = x86_64 ] && curl -sLo ./tfctl.tar.gz ${tfctl_download_url}/${tfctl_version}/tfctl_Linux_amd64.tar.gz
 # For ARM64
@@ -15,11 +15,6 @@ echo_green "Download tfctl and kubectl"
 tar -xzf ./tfctl.tar.gz tfctl
 mv ./tfctl ./bin/tfctl
 rm tfctl.tar.gz
-
-# For AMD64 / x86_64
-[ $(uname -m) = x86_64 ] &&  curl -sLo ./bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-# For ARM64
-[ $(uname -m) = aarch64 ] && curl -sLo ./bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 
 kubectl create secret generic branch-planner-token \
     --namespace=flux-system \
@@ -31,20 +26,29 @@ echo_green "Export helmrepository source tf-controller"
   --url=https://weaveworks.github.io/tf-controller/ \
   --verbose \
   --interval=10m \
-  --export > ./clusters/kind/tf-controller-helm-repo.yaml
+  --export > ./clusters/kind/helm-repo-tf-controller.yaml
 
-echo_green "Export helmrelease tf-controller "
+
+
+echo_green "Export helmrelease tf-controller"
+cat <<EOF > values-tf-controller.yml
+branchPlanner:
+  enabled: true
+EOF
+
 ./bin/flux create helmrelease tf-controller \
+  --namespace=flux-system \
   --chart=tf-controller \
   --values="values-tf-controller.yml" \
   --verbose \
   --interval=30s \
   --source=HelmRepository/tf-controller.flux-system \
-  --export > ./apps/tf-controller-helm-release.yaml
+  --export > ./apps/helm-release-tf-controller.yaml
+rm values-tf-controller.yml
 
 echo_green "Export kustomization tf-ressources"
 ./bin/flux create kustomization tf-ressources \
-  --target-namespace=default \
+  --namespace=default \
   --source=GitRepository/flux-system.flux-system \
   --path="./tf/flux" \
   --prune=true \
@@ -53,11 +57,4 @@ echo_green "Export kustomization tf-ressources"
   --interval=30m \
   --retry-interval=2m \
   --health-check-timeout=3m \
-  --export > ./clusters/kind/tf-ressources-kustomization.yaml
-
-echo_green "Export terraform ressources "
-./bin/tfctl create tf-ressources \
-  --interval=30s \
-  --source=GitRepository/flux-system.flux-system \
-  --path="./tf" \
-  --export > ./tf/flux/tf-controller.yaml
+  --export > ./clusters/kind/kustomization-tf-ressources.yaml
