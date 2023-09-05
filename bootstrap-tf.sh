@@ -28,8 +28,6 @@ echo_green "Export helmrepository source tf-controller"
   --interval=10m \
   --export > ./clusters/kind/helm-repo-tf-controller.yaml
 
-
-
 echo_green "Export helmrelease tf-controller"
 cat <<EOF > values-tf-controller.yml
 branchPlanner:
@@ -41,7 +39,7 @@ EOF
   --chart=tf-controller \
   --values="values-tf-controller.yml" \
   --verbose \
-  --interval=30s \
+  --interval=1m \
   --source=HelmRepository/tf-controller.flux-system \
   --chart-version="v0.16.0-rc.2" \
   --export > ./apps/helm-release-tf-controller.yaml
@@ -55,7 +53,7 @@ echo_green "Export kustomization tf-ressources"
   --prune=true \
   --wait=true \
   --verbose \
-  --interval=30m \
+  --interval=1m \
   --retry-interval=2m \
   --health-check-timeout=3m \
   --export > ./clusters/kind/kustomization-tf-ressources.yaml

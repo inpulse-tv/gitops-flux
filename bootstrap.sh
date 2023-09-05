@@ -9,7 +9,7 @@ owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
 
 mkdir -p ./bin ./apps ./clusters/kind
 
-echo_green "Download flux, kind & kubectl"
+echo_green "Download flux, kind, gitops & kubectl"
 # For AMD64 / x86_64
 [ $(uname -m) = x86_64 ] && curl -sLo ./bin/kind https://kind.sigs.k8s.io/dl/${kind_version}/kind-linux-amd64
 # For ARM64
@@ -24,6 +24,10 @@ curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bi
 [ $(uname -m) = aarch64 ] && curl -sLo ./bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 chmod +x ./bin/kubectl
 
+curl --silent --location "https://github.com/weaveworks/weave-gitops/releases/download/v0.31.2/gitops-$(uname)-$(uname -m).tar.gz" | tar xz -C /tmp
+sudo mv /tmp/gitops ./bin
+gitops version
+
 echo_green "Create k8s cluster"
 ./bin/kind create cluster --name gitops-flux
 
@@ -37,7 +41,22 @@ echo_green "Bootstrap flux and commit to github"
   --branch=main \
   --path=./clusters/kind \
   --personal
-  
+
+echo_green "Export helmrelease tf-controller"
+
+echo_green "Create Weave gitops dahsboard"
+cat <<EOF > ./values-gitops-dahsboard.yml
+  service:
+    type: nodePort
+    nodePort: 30000
+EOF
+gitops create dashboard ww-gitops \
+# ./bin/gitops create dashboard ww-gitops \
+  --password=admin \
+  --values="./values-gitops-dahsboard.yml" \
+  --export > ./clusters/kind/weave-gitops-dashboard.yaml
+rm ./values-gitops-dahsboard.yml
+
 echo_green "Export kustomization apps"
 ./bin/flux create kustomization apps \
   --namespace=flux-system \
@@ -46,7 +65,7 @@ echo_green "Export kustomization apps"
   --prune=true \
   --wait=true \
   --verbose \
-  --interval=5m \
+  --interval=1m \
   --retry-interval=2m \
   --health-check-timeout=3m \
   --export > ./clusters/kind/kustomization-apps.yaml
@@ -63,7 +82,6 @@ echo_green "Export helmrelease localstack"
   --namespace=default \
   --chart=localstack \
   --verbose \
-  --interval=30s \
+  --interval=1m \
   --source=HelmRepository/localstack.flux-system \
   --export > ./apps/helm-release-localstack.yaml
-
