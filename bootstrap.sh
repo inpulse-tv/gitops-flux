@@ -29,7 +29,7 @@ sudo mv /tmp/gitops ./bin
 gitops version
 
 echo_green "Create k8s cluster"
-./bin/kind create cluster --name gitops-flux
+./bin/kind create cluster --name=gitops-flux --config=kind-config.yaml
 
 set -e
 ./bin/flux  check --pre
@@ -41,8 +41,6 @@ echo_green "Bootstrap flux and commit to github"
   --branch=main \
   --path=./clusters/kind \
   --personal
-
-echo_green "Export helmrelease tf-controller"
 
 echo_green "Create Weave gitops dahsboard"
 cat <<EOF > ./values-gitops-dahsboard.yml
