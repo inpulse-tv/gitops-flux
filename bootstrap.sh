@@ -42,17 +42,17 @@ echo_green "Bootstrap flux and commit to github"
   --path=./clusters/kind \
   --personal
 
-echo_green "Create Weave gitops dahsboard"
+echo_green "Export Weave gitops dahsboard"
 cat <<EOF > ./values-gitops-dahsboard.yml
   service:
     type: nodePort
     nodePort: 30000
 EOF
+# ./bin/gitops create dashboard ww-gitops
 gitops create dashboard ww-gitops \
-# ./bin/gitops create dashboard ww-gitops \
   --password=admin \
   --values="./values-gitops-dahsboard.yml" \
-  --export > ./clusters/kind/weave-gitops-dashboard.yaml
+  --export > ./clusters/kind/helm-weave-gitops-dashboard.yaml
 rm ./values-gitops-dahsboard.yml
 
 echo_green "Export kustomization apps"
