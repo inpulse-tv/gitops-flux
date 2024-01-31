@@ -4,6 +4,7 @@
 
 flux_version="2.0.1"
 kind_version="v0.20.0"
+gitops_version="v0.38.0"
 github_repository=$(git remote get-url origin | cut -d ':' -f2)
 owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
 
@@ -24,7 +25,7 @@ curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bi
 [ $(uname -m) = aarch64 ] && curl -sLo ./bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl"
 chmod +x ./bin/kubectl
 
-curl --silent --location "https://github.com/weaveworks/weave-gitops/releases/download/v0.31.2/gitops-$(uname)-$(uname -m).tar.gz" | tar xz -C /tmp
+curl --silent --location "https://github.com/weaveworks/weave-gitops/releases/download/${gitops_version}/gitops-$(uname)-$(uname -m).tar.gz" | tar xz -C /tmp
 sudo mv /tmp/gitops ./bin
 gitops version
 
@@ -48,8 +49,7 @@ cat <<EOF > ./values-gitops-dahsboard.yml
     type: nodePort
     nodePort: 30000
 EOF
-# ./bin/gitops create dashboard ww-gitops
-gitops create dashboard ww-gitops \
+./bin/gitops create dashboard ww-gitops \
   --password=admin \
   --values="./values-gitops-dahsboard.yml" \
   --export > ./clusters/kind/helm-weave-gitops-dashboard.yaml

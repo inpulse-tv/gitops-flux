@@ -53,7 +53,7 @@ echo_green "Export kustomization tf-ressources"
   --prune=true \
   --wait=true \
   --verbose \
-  --interval=1m \
+  --interval=10m \
   --retry-interval=2m \
   --health-check-timeout=3m \
   --export > ./clusters/kind/kustomization-tf-ressources.yaml
