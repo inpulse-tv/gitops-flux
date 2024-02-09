@@ -46,7 +46,7 @@ echo_green "Bootstrap flux and commit to github"
 echo_green "Export Weave gitops dahsboard"
 cat <<EOF > ./values-gitops-dahsboard.yml
   service:
-    type: nodePort
+    type: NodePort
     nodePort: 30000
 EOF
 ./bin/gitops create dashboard ww-gitops \
@@ -69,19 +69,17 @@ echo_green "Export kustomization apps"
   --export > ./clusters/kind/kustomization-apps.yaml
 
 echo_green "Export helmrepository source localstack"
-cat <<EOF > ./values-localstack.yml
-  service:
-    type: nodePort
-    nodePort: 30001
-EOF
 ./bin/flux create source helm localstack \
   --url=https://localstack.github.io/helm-charts \
   --verbose \
   --interval=10m \
-  --values="./values-localstack.yml" \
   --export > ./clusters/kind/helm-repo-localstack.yaml
-rm ./values-localstack.yml
 
+cat <<EOF > ./values-localstack.yml
+  service:
+    type: NodePort
+    nodePort: 30001
+EOF
 echo_green "Export helmrelease localstack"
 ./bin/flux create helmrelease localstack \
   --namespace=default \
@@ -89,4 +87,7 @@ echo_green "Export helmrelease localstack"
   --verbose \
   --interval=1m \
   --source=HelmRepository/localstack.flux-system \
+  --values="./values-localstack.yml" \
   --export > ./apps/helm-release-localstack.yaml
+
+rm ./values-localstack.yml
