@@ -69,11 +69,18 @@ echo_green "Export kustomization apps"
   --export > ./clusters/kind/kustomization-apps.yaml
 
 echo_green "Export helmrepository source localstack"
+cat <<EOF > ./values-localstack.yml
+  service:
+    type: nodePort
+    nodePort: 30001
+EOF
 ./bin/flux create source helm localstack \
   --url=https://localstack.github.io/helm-charts \
   --verbose \
   --interval=10m \
+  --values="./values-localstack.yml" \
   --export > ./clusters/kind/helm-repo-localstack.yaml
+rm ./values-localstack.yml
 
 echo_green "Export helmrelease localstack"
 ./bin/flux create helmrelease localstack \
