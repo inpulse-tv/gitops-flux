@@ -2,7 +2,7 @@
 
 . ./common.sh
 
-tfctl_version="v0.16.0-rc.2"
+tfctl_version="v0.16.0-rc.3"
 tfctl_download_url="https://github.com/weaveworks/tf-controller/releases/download"
 
 mkdir -p ./bin ./apps/ ./tf/flux

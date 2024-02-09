@@ -33,11 +33,25 @@ provider "aws" {
   }
 }
 
+resource "aws_vpc" "vpc" {
+
+}
+
+resource "aws_subnet" "subnet_a" {
+  vpc_id            = aws_vpc.vpc
+  availability_zone = "us-east-1a"
+}
+
+resource "aws_subnet" "subnet_b" {
+  vpc_id            = aws_vpc.vpc
+  availability_zone = "us-east-1b"
+}
+
 resource "aws_instance" "app_server" {
   ami           = "ami-830c94e3"
   instance_type = "t2.micro"
 
-  tags = {
-    Name = "ExampleAppServerInstance"
-  }
+  subnet_id = aws_subnet.subnet_a
 }
+
+
