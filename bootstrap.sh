@@ -77,8 +77,11 @@ echo_green "Export helmrepository source localstack"
 
 cat <<EOF > ./values-localstack.yml
   service:
-    type: NodePort
-    nodePort: 30001
+    edgeService:
+      nodePort: 30001
+    externalServicePorts:
+    start: 4510
+    end: 4510
 EOF
 echo_green "Export helmrelease localstack"
 ./bin/flux create helmrelease localstack \
