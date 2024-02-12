@@ -80,8 +80,8 @@ cat <<EOF > ./values-localstack.yml
     edgeService:
       nodePort: 30001
     externalServicePorts:
-    start: 4510
-    end: 4510
+      start: 4510
+      end: 4510
 EOF
 echo_green "Export helmrelease localstack"
 ./bin/flux create helmrelease localstack \
