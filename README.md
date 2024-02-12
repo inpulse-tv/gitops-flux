@@ -63,11 +63,11 @@ A partir de maintenant le tf-controller va appliquer les fichiers terraform qui 
 Nous allons maintenant modifier nos fichier terraform et créer une pull request à partir de celles-ci. Si vous etes familier avec terraform modifier le fichier `./tf/main.tf` à votre guise. Si non, ajouter on peut ajouter le bloc ci-dessous au fichier  
 
 ``` 
-resource "aws_instance" "app_server" {
+resource "aws_instance" "app_server_b" {
   ami           = "ami-830c94e3"
   instance_type = "t2.micro"
 
-  subnet_id = aws_subnet.subnet_b
+  subnet_id = aws_subnet.subnet_b.id
 }
 ```
 Maintenant poussons la modification 

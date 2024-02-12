@@ -38,12 +38,12 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "subnet_a" {
-  vpc_id            = aws_vpc.vpc
+  vpc_id            = aws_vpc.vpc.id
   availability_zone = "us-east-1a"
 }
 
 resource "aws_subnet" "subnet_b" {
-  vpc_id            = aws_vpc.vpc
+  vpc_id            = aws_vpc.vpc.id
   availability_zone = "us-east-1b"
 }
 
@@ -51,7 +51,7 @@ resource "aws_instance" "app_server" {
   ami           = "ami-830c94e3"
   instance_type = "t2.micro"
 
-  subnet_id = aws_subnet.subnet_a
+  subnet_id = aws_subnet.subnet_a.id
 }
 
 
