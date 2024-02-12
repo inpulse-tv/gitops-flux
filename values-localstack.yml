@@ -1,0 +1,6 @@
+service:
+  edgeService:
+    nodePort: 30001
+  externalServicePorts:
+    start: 4510
+    end: 4510

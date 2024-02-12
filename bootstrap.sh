@@ -2,8 +2,8 @@
 
 . ./common.sh
 
-flux_version="2.0.1"
-kind_version="v0.20.0"
+flux_version="2.2.3"
+kind_version="v0.21.0"
 gitops_version="v0.38.0"
 github_repository=$(git remote get-url origin | cut -d ':' -f2)
 owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
@@ -43,17 +43,11 @@ echo_green "Bootstrap flux and commit to github"
   --path=./clusters/kind \
   --personal
 
-echo_green "Export Weave gitops dahsboard"
-cat <<EOF > ./values-gitops-dahsboard.yml
-  service:
-    type: NodePort
-    nodePort: 30000
-EOF
+echo_green "Export Weave gitops dashboard"
 ./bin/gitops create dashboard ww-gitops \
   --password=admin \
   --values="./values-gitops-dahsboard.yml" \
   --export > ./clusters/kind/helm-weave-gitops-dashboard.yaml
-rm ./values-gitops-dahsboard.yml
 
 echo_green "Export kustomization apps"
 ./bin/flux create kustomization apps \
@@ -75,14 +69,6 @@ echo_green "Export helmrepository source localstack"
   --interval=10m \
   --export > ./clusters/kind/helm-repo-localstack.yaml
 
-cat <<EOF > ./values-localstack.yml
-  service:
-    edgeService:
-      nodePort: 30001
-    externalServicePorts:
-      start: 4510
-      end: 4510
-EOF
 echo_green "Export helmrelease localstack"
 ./bin/flux create helmrelease localstack \
   --namespace=default \
@@ -92,5 +78,3 @@ echo_green "Export helmrelease localstack"
   --source=HelmRepository/localstack.flux-system \
   --values="./values-localstack.yml" \
   --export > ./apps/helm-release-localstack.yaml
-
-rm ./values-localstack.yml

@@ -37,7 +37,7 @@ git commit -m "Add localstack helm repo & release and track kustomization file u
 git push
 ```
 
-Weave-gitops vient avec un dashboard que l'on peut utiliser pour voir l'ensemble des réconciliation flux qui se produisent. On peut aller sur http://localhost:9001 (utilisateur admin, password admin) et lister l'ensemble de réconciliation en cours
+Weave-gitops vient avec un dashboard que l'on peut utiliser pour voir l'ensemble des réconciliation flux qui se produisent. On peut aller sur http://localhost:9001 (utilisateur admin, password admin) et lister l'ensemble des réconciliations en cours
 
 ## Installation tf-controller
 
