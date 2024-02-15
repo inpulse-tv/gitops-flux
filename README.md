@@ -1,6 +1,8 @@
 # gitops-flux
 
-Ce dépôt contient les ressources relatives à l'épisode XX de inpulse.tv 👉 On y trouve un déploiement de Flux sur cluster Kubernetes local avec Kind.
+Ce dépôt contient les ressources relatives à l'épisode 43 de inpulse.tv 👉 https://youtu.be/r8KANQwLotk
+
+ On y trouve un déploiement de Flux sur cluster Kubernetes local avec Kind.
 
 ## FORK ME ⚠️
 

@@ -26,8 +26,8 @@ curl -s https://fluxcd.io/install.sh | FLUX_VERSION=${flux_version} bash -s ./bi
 chmod +x ./bin/kubectl
 
 curl --silent --location "https://github.com/weaveworks/weave-gitops/releases/download/${gitops_version}/gitops-$(uname)-$(uname -m).tar.gz" | tar xz -C /tmp
-sudo mv /tmp/gitops ./bin
-gitops version
+mv /tmp/gitops ./bin
+./bin/gitops version
 
 echo_green "Create k8s cluster"
 ./bin/kind create cluster --name=gitops-flux --config=kind-config.yaml
@@ -78,3 +78,6 @@ echo_green "Export helmrelease localstack"
   --source=HelmRepository/localstack.flux-system \
   --values="./values-localstack.yml" \
   --export > ./apps/helm-release-localstack.yaml
+
+echo_green "Running cloud view"
+docker run -d -p 3000:3000 ghcr.io/laupse/cloud-view:v0.1.0 --localstack --localstack-host host.docker.internal:4566
