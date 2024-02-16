@@ -5,8 +5,8 @@
 flux_version="2.2.3"
 kind_version="v0.21.0"
 gitops_version="v0.38.0"
-github_repository=$(git remote get-url origin | cut -d ':' -f2)
-owner=$(git remote get-url origin | cut -d ':' -f2 | cut -d'/' -f1)
+github_repository="littlejo/gitops-flux.git"
+owner="littlejo"
 
 mkdir -p ./bin ./apps ./clusters/kind
 

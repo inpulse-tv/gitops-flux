@@ -1,0 +1,23 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: localstack
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: localstack
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: localstack
+        namespace: flux-system
+  interval: 1m0s
+  values:
+    service:
+      edgeService:
+        nodePort: 30001
+      externalServicePorts:
+        end: 4510
+        start: 4510
