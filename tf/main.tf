@@ -56,4 +56,9 @@ resource "aws_instance" "app_server_a" {
   subnet_id = aws_subnet.subnet_a.id
 }
 
+resource "aws_instance" "app_server_b" {
+  ami           = "ami-830c94e3"
+  instance_type = "t2.micro"
 
+  subnet_id = aws_subnet.subnet_b.id
+}
